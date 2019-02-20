@@ -1,15 +1,18 @@
-import React from "react";
+import React, { Fragment } from "react";
+import CardActions from "@material-ui/core/CardActions";
 import {
+  Show,
+  SimpleShowLayout,
   List,
   Edit,
   Create,
   Datagrid,
   TextField,
   EditButton,
+  DeleteButton,
+  ShowButton,
   SimpleForm,
-  TextInput,
-  ImageInput,
-  ImageField
+  TextInput
 } from "react-admin";
 
 export const UserList = props => {
@@ -23,10 +26,44 @@ export const UserList = props => {
           <TextField source="username" />
           <TextField source="email" />
           {profile && profile.isAdmin ? <EditButton /> : null}
+          <ShowButton />
         </Datagrid>
       </List>
     );
   } catch (error) {}
+};
+
+const cardActionStyle = {
+  zIndex: 2,
+  display: "inline-block",
+  float: "right"
+};
+
+const UserShowActions = ({ permissions, basePath, data, resource }) => {
+  const profileJson = localStorage.getItem("RAFirebaseProfile");
+  const profile = JSON.parse(profileJson);
+  return (
+    <CardActions style={cardActionStyle}>
+      {profile && profile.isAdmin && (
+        <Fragment>
+          <EditButton basePath={basePath} record={data} />
+          <DeleteButton basePath={basePath} record={data} resource={resource} />
+        </Fragment>
+      )}
+    </CardActions>
+  );
+};
+
+export const UserShow = props => {
+  return (
+    <Show actions={<UserShowActions />} {...props}>
+      <SimpleShowLayout>
+        <TextField source="name" />
+        <TextField source="username" />
+        <TextField source="email" />
+      </SimpleShowLayout>
+    </Show>
+  );
 };
 
 export const UserCreate = props => (
@@ -35,14 +72,6 @@ export const UserCreate = props => (
       <TextInput source="name" />
       <TextInput source="username" />
       <TextInput source="email" />
-      <ImageInput
-        source="image"
-        label="Related Image"
-        accept="image/*"
-        multiple
-      >
-        <ImageField source="src" title="title" />
-      </ImageInput>
     </SimpleForm>
   </Create>
 );
@@ -53,14 +82,6 @@ export const UserEdit = props => (
       <TextInput source="name" />
       <TextInput source="username" />
       <TextInput source="email" />
-      <ImageInput
-        source="image"
-        label="Related Image"
-        accept="image/*"
-        multiple
-      >
-        <ImageField source="src" title="title" />
-      </ImageInput>
     </SimpleForm>
   </Edit>
 );

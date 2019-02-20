@@ -3,7 +3,7 @@ import { Admin, Resource } from "react-admin";
 import { RestProvider, base64Uploader } from "ra-data-firebase-client";
 import AuthProvider from "./lib/AuthProvider";
 
-import { UserList, UserEdit, UserCreate } from "./Users";
+import { UserList, UserEdit, UserCreate, UserShow } from "./Users";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDyTBLLk2DC1GYovd_nmxYKF1Lkl83P7V0",
@@ -38,6 +38,7 @@ class App extends Component {
       >
         <Resource
           name="users"
+          show={UserShow}
           list={UserList}
           edit={UserEdit}
           create={UserCreate}

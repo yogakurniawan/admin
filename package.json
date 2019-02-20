@@ -4,6 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "@material-ui/core": "^3.9.2",
     "prop-types": "^15.7.2",
     "ra-data-firebase-client": "^0.1.6",
     "react": "^16.8.2",
