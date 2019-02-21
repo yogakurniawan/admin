@@ -4,6 +4,7 @@ import { RestProvider, base64Uploader } from "ra-data-firebase-client";
 import AuthProvider from "./lib/AuthProvider";
 
 import { UserList, UserEdit, UserCreate, UserShow } from "./Users";
+import { CalegList, CalegEdit, CalegCreate, CalegShow } from "./Caleg";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDyTBLLk2DC1GYovd_nmxYKF1Lkl83P7V0",
@@ -15,7 +16,7 @@ const firebaseConfig = {
 };
 
 const trackedResources = [
-  { name: "posts", isPublic: true },
+  { name: "caleg", isPublic: true },
   { name: "users", isPublic: true }
 ];
 
@@ -42,6 +43,13 @@ class App extends Component {
           list={UserList}
           edit={UserEdit}
           create={UserCreate}
+        />
+        <Resource
+          name="caleg"
+          show={CalegShow}
+          list={CalegList}
+          edit={CalegEdit}
+          create={CalegCreate}
         />
       </Admin>
     );

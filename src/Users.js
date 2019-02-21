@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
 import CardActions from "@material-ui/core/CardActions";
+import { unparse as convertToCSV } from "papaparse/papaparse.min";
 import {
+  downloadCSV,
   Show,
   SimpleShowLayout,
   List,
@@ -15,12 +17,20 @@ import {
   TextInput
 } from "react-admin";
 
+const exporter = posts => {
+  const csv = convertToCSV({
+    data: posts,
+    fields: ["name", "username", "email"]
+  });
+  downloadCSV(csv, "posts");
+};
+
 export const UserList = props => {
   try {
     const profileJson = localStorage.getItem("RAFirebaseProfile");
     const profile = JSON.parse(profileJson);
     return (
-      <List title="All users" {...props}>
+      <List title="All users" exporter={exporter} {...props}>
         <Datagrid>
           <TextField source="name" />
           <TextField source="username" />
