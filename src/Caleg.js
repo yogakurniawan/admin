@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import CardActions from "@material-ui/core/CardActions";
+import firebase from "firebase";
 import { unparse as convertToCSV } from "papaparse/papaparse.min";
 import {
   downloadCSV,
@@ -8,14 +9,39 @@ import {
   List,
   Edit,
   Create,
+  Toolbar,
   Datagrid,
   TextField,
+  SaveButton,
   EditButton,
   DeleteButton,
   ShowButton,
   SimpleForm,
   TextInput
 } from "react-admin";
+
+async function checkIfNikExists(nik) {
+  return new Promise(resolve => {
+    const calegRef = firebase.database().ref("caleg");
+    calegRef
+      .orderByChild("nik")
+      .equalTo(nik)
+      .on("value", function(snapshot) {
+        resolve(snapshot.val());
+      });
+  });
+}
+
+const nikValidation = values => {
+  if (values.nik) {
+    return checkIfNikExists(values.nik).then(snapshot => {
+      if (snapshot !== null) {
+        throw { nik: "NIK can not be same" };
+      }
+    });
+  }
+  return Promise.resolve();
+};
 
 const exporter = posts => {
   const csv = convertToCSV({
@@ -95,9 +121,18 @@ export const CalegShow = props => {
   );
 };
 
+const CalegCreateToolbar = props => {
+  console.log(props);
+  return (
+    <Toolbar {...props}>
+      <SaveButton disabled={props.invalid} />
+    </Toolbar>
+  );
+};
+
 export const CalegCreate = props => (
   <Create {...props}>
-    <SimpleForm>
+    <SimpleForm toolbar={<CalegCreateToolbar />} asyncValidate={nikValidation}>
       <TextInput source="nameLengkap" />
       <TextInput source="nik" />
       <TextInput source="desa" />
